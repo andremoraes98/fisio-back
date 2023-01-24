@@ -1,6 +1,7 @@
-import * as express from "express";
+import express from 'express';
 import { Request, Response } from 'express';
-import * as cors from 'cors';
+import cors from 'cors';
+import userRoute from './routes/user';
 import 'express-async-errors';
 
 const app = express();
@@ -30,6 +31,7 @@ app.use((err: Error, _req: Request, res: Response, next: express.NextFunction) =
 
   next();
 });
+app.use(userRoute);
 
 app.get('/', (_req, res) => {
   return res.status(200).json({ message: 'working' })

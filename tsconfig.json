@@ -1,23 +1,18 @@
 {
   "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": ".",
     "target": "es2019",
     "module": "commonjs",
-    "sourceMap": true,                     
-    "outDir": "./build",
-    "rootDir": "./src",
-    "strict": true,
-    "moduleResolution": "node",
-    "baseUrl": ".", 
+    "typeRoots": [
+      "src/@types",
+      "./node_modules/@types"
+    ],
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": false,
+    "strict": true,
     "skipLibCheck": true,
-    "paths": {
-      "*": ["node_modules/*"]
-    }
+    "resolveJsonModule": true,
   },
-  "include": ["src/**/*", "src/database/models/Users.ts"],
-  "exclude": ["src/tests"]
+  "exclude": ["node_modules"]
 }

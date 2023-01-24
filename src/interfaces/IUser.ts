@@ -1,7 +1,7 @@
-interface IUsers {
+interface IUser {
   name: string;
   email: string;
   password: string;
 }
 
-export default IUsers
+export default IUser
