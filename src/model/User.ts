@@ -17,13 +17,15 @@ class User extends MongoModel<IUser> {
   }
 
   public async readAll(): Promise<IUser[]> {
-    const users = await this._model.find({}, {
-      email: 1,
-      name: 1,
-      password: 1,
-    });
+    const users = await this._model.find();
 
     return users;
+  }
+
+  public async readOne(_id: string): Promise<IUser | null> {
+    const user = await this._model.findOne({ _id });
+
+    return user;
   }
 
   public async create(object: IUser): Promise<IUser> {
@@ -33,11 +35,11 @@ class User extends MongoModel<IUser> {
   }
 
   public async updateOne(_id: string, object: IUser): Promise<void> {
-    await this._model.findOneAndUpdate({ _id }, object)
+    await this._model.findOneAndUpdate({ _id }, object);
   }
 
   public async destroy(_id: string): Promise<void> {
-    await this._model.findByIdAndDelete(_id)
+    await this._model.findByIdAndDelete(_id);
   }
 }
 
