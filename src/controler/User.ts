@@ -19,7 +19,22 @@ class UserController {
     const userInfos = req.body as IUser
     const result = await this._service.create(userInfos);
 
-    return res.status(200).json(result);
+    return res.status(201).json(result);
+  }
+
+  public async updateOne(req: Request, res: Response) {
+    const { id } = req.params
+    const userInfos = req.body as IUser
+    await this._service.updateOne(id, userInfos);
+
+    return res.status(204);
+  }
+
+  public async destroy(req: Request, res: Response) {
+    const { id } = req.params
+    await this._service.destroy(id);
+
+    return res.status(204);
   }
 }
 

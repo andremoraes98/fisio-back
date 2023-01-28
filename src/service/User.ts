@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import IModel from '../interfaces/IModel';
 import IService from '../interfaces/IService';
 import IUser from '../interfaces/IUser';
@@ -19,6 +20,22 @@ class UserService implements IService<IUser> {
     const createdUser = await this._user.create(user)
 
     return createdUser
+  }
+
+  public async updateOne(_id: string, object: IUser): Promise<void> {
+    if (isValidObjectId(_id)) {
+      throw new ReferenceError('Id inválido!')
+    }
+
+    await this._user.updateOne(_id, object)
+  }
+
+  public async destroy(_id: string): Promise<void> {
+    if (isValidObjectId(_id)) {
+      throw new ReferenceError('Id inválido!')
+    }
+    
+    await this._user.destroy(_id)
   }
 }
 

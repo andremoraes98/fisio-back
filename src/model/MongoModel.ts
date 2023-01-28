@@ -10,6 +10,8 @@ abstract class MongoModel<T> implements IModel<T> {
 
   abstract readAll(): Promise<T[]>;
   abstract create(object: T): Promise<T>;
+  abstract updateOne(_id: string, object: T): Promise<void>;
+  abstract destroy(_id: string): Promise<void>;
 }
 
 export default MongoModel;
