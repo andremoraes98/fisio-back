@@ -17,7 +17,9 @@ class User extends MongoModel<IUser> {
   }
 
   public async readAll(): Promise<IUser[]> {
-    const users = await this._model.find();
+    const users = await this._model.find({}, {
+      password: 0
+    });
 
     return users;
   }
