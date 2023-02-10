@@ -1,9 +1,10 @@
 import { model as mongooseCreateModel, Schema } from 'mongoose';
 import IUser from '../interfaces/IUser';
 import MongoModel from './MongoModel';
+import { IUserModel } from '../interfaces/IModel';
 
-const userMongooseSchema = new Schema<IUser>(
-  {
+const userMongooseSchema = new Schema<IUser>({
+
     email: String,
     name: String,
     password: String,
@@ -11,7 +12,7 @@ const userMongooseSchema = new Schema<IUser>(
   { versionKey: false },
 );
 
-class User extends MongoModel<IUser> {
+class User extends MongoModel<IUser> implements IUserModel {
   constructor(model = mongooseCreateModel('User', userMongooseSchema)) {
     super(model);
   }
@@ -25,7 +26,9 @@ class User extends MongoModel<IUser> {
   }
 
   public async readOne(_id: string): Promise<IUser | null> {
-    const user = await this._model.findOne({ _id });
+    const user = await this._model.findById(_id, {
+      password: 0
+    });
 
     return user;
   }
@@ -42,6 +45,12 @@ class User extends MongoModel<IUser> {
 
   public async destroy(_id: string): Promise<void> {
     await this._model.findByIdAndDelete(_id);
+  }
+
+  public async findOneWhereEmail(email: string): Promise<IUser | null> {
+    const user = await this._model.findOne({ email });
+
+    return user;
   }
 }
 
