@@ -1,13 +1,17 @@
 import { isValidObjectId } from 'mongoose';
-import IModel from '../interfaces/IModel';
-import IService from '../interfaces/IService';
+import { IUserModel } from '../interfaces/IModel';
+import { IUserService } from '../interfaces/IService';
 import IUser from '../interfaces/IUser';
-import errors from 'restify-errors'
+import errors from 'restify-errors';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
-class UserService implements IService<IUser> {
-  private _user: IModel<IUser>;
+const JWT_SECRET = process.env.JWT_SECRET || 'jwt_secret'
 
-  constructor(model: IModel<IUser>) {
+class UserService implements IUserService {
+  private _user: IUserModel;
+
+  constructor(model: IUserModel) {
     this._user = model;
   }
 
@@ -28,7 +32,12 @@ class UserService implements IService<IUser> {
   }
 
   public async create(user: IUser): Promise<IUser> {
-    const createdUser = await this._user.create(user)
+    const { password } = user;
+    const encryptedPassword = bcrypt.hashSync(password, 10);
+    const createdUser = await this._user.create({
+      ...user,
+      password: encryptedPassword,
+    })
 
     return createdUser
   }
@@ -59,6 +68,18 @@ class UserService implements IService<IUser> {
     }
     
     await this._user.destroy(_id)
+  }
+  
+  public async login(email: string): Promise<string> {
+    const user = await this._user.findOneWhereEmail(email);
+
+    if (!user) {
+      throw new errors.NotFoundError('Usuário não encontrado!')
+    };
+
+    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET);
+
+    return token
   }
 }
 

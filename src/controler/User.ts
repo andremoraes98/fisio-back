@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import IService from '../interfaces/IService';
+import { IUserService } from '../interfaces/IService';
 import IUser from '../interfaces/IUser';
 
 class UserController {
-  private _service: IService<IUser>;
+  private _service: IUserService;
 
-  constructor(service: IService<IUser>) {
+  constructor(service: IUserService) {
     this._service = service;
   }
 
@@ -44,6 +44,13 @@ class UserController {
 
     return res.send(204);
   }
+
+  public async login(req: Request, res: Response) {
+    const { email } = req.body;
+    const token = await this._service.login(email);
+
+    res.status(200).json({token});
+  };
 }
 
 export default UserController;
