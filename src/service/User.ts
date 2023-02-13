@@ -21,6 +21,12 @@ class UserService implements IUserService {
     return users;
   }
 
+  public async readAllByRole(role: string): Promise<IUser[]> {
+    const users = await this._user.readAllByRole(role);
+
+    return users;
+  }
+
   public async readOne(_id: string): Promise<IUser> {
     const user = await this._user.readOne(_id);
 
@@ -34,12 +40,13 @@ class UserService implements IUserService {
   public async create(user: IUser): Promise<IUser> {
     const { password } = user;
     const encryptedPassword = bcrypt.hashSync(password, 10);
+
     const createdUser = await this._user.create({
       ...user,
       password: encryptedPassword,
-    })
+    });
 
-    return createdUser
+    return createdUser;
   }
 
   public async updateOne(_id: string, object: IUser): Promise<void> {
@@ -52,8 +59,22 @@ class UserService implements IUserService {
     if (!user) {
       throw new errors.NotFoundError('Usuário não encontrado!')
     }
+  
+    const { password } = object;
 
-    await this._user.updateOne(_id, object)
+    if (password) {
+      const encryptedPassword = bcrypt.hashSync(password, 10);
+  
+      await this._user.updateOne(_id, {
+        ...object,
+        password: encryptedPassword,
+      });
+    } else {
+      await this._user.updateOne(_id, {
+        ...user,
+        ...object,
+      });
+    }
   }
 
   public async destroy(_id: string): Promise<void> {

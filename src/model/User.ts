@@ -4,9 +4,10 @@ import MongoModel from './MongoModel';
 import { IUserModel } from '../interfaces/IModel';
 
 const userMongooseSchema = new Schema<IUser>({
-
-    email: String,
     name: String,
+    email: String,
+    classes: { type: [String], required: false},
+    role: String,
     password: String,
   },
   { versionKey: false },
@@ -19,6 +20,14 @@ class User extends MongoModel<IUser> implements IUserModel {
 
   public async readAll(): Promise<IUser[]> {
     const users = await this._model.find({}, {
+      password: 0
+    });
+
+    return users;
+  }
+
+  public async readAllByRole(role: string): Promise<IUser[]> {
+    const users = await this._model.find({ role }, {
       password: 0
     });
 
