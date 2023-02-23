@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import IService from '../interfaces/IService';
+import { IUserService } from '../interfaces/IService';
 import IUser from '../interfaces/IUser';
 
 class UserController {
-  private _service: IService<IUser>;
+  private _service: IUserService;
 
-  constructor(service: IService<IUser>) {
+  constructor(service: IUserService) {
     this._service = service;
   }
 
@@ -15,8 +15,17 @@ class UserController {
     return res.status(200).json(result);
   }
 
+  public async readAllByRole(req: Request, res: Response) {
+    const { role } = req.params;
+
+    const result = await this._service.readAllByRole(role);
+
+    return res.status(200).json(result);
+  }
+
   public async readOne(req: Request, res: Response) {
     const { id } = req.params;
+
     const user = await this._service.readOne(id);
 
     return res.status(200).json(user);
@@ -44,6 +53,13 @@ class UserController {
 
     return res.send(204);
   }
+
+  public async login(req: Request, res: Response) {
+    const { email } = req.body;
+    const token = await this._service.login(email);
+
+    res.status(200).json({token});
+  };
 }
 
 export default UserController;
