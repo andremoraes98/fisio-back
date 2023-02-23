@@ -34,9 +34,9 @@ class User extends MongoModel<IUser> implements IUserModel {
     return users;
   }
 
-  public async readOne(_id: string): Promise<IUser | null> {
+  public async readOne(_id: string, withPassword = false): Promise<IUser | null> {
     const user = await this._model.findById(_id, {
-      password: 0
+      password: withPassword ? 1 : 0,
     });
 
     return user;

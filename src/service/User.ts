@@ -53,26 +53,27 @@ class UserService implements IUserService {
     if (!isValidObjectId(_id)) {
       throw new ReferenceError('Id inválido!')
     }
+  
+    const { password } = object;
 
-    const user = this._user.readOne(_id);
+    const user = this._user.readOne(_id, !password);
 
     if (!user) {
       throw new errors.NotFoundError('Usuário não encontrado!')
     }
-  
-    const { password } = object;
 
-    if (password) {
-      const encryptedPassword = bcrypt.hashSync(password, 10);
-  
-      await this._user.updateOne(_id, {
-        ...object,
-        password: encryptedPassword,
-      });
-    } else {
+    if (!password) {
       await this._user.updateOne(_id, {
         ...user,
         ...object,
+      });
+    } else {
+      const encryptedPassword = bcrypt.hashSync(password, 10);
+  
+      await this._user.updateOne(_id, {
+        ...user,
+        ...object,
+        password: encryptedPassword,
       });
     }
   }

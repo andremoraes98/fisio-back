@@ -10,4 +10,11 @@ interface IUser extends Index {
   classes: string[];
 }
 
+interface IExercise extends Index {
+  name: string;
+  link: string;
+  muscle: string[];
+}
+
 export default IUser
+export { IExercise }
