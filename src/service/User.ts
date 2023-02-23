@@ -1,7 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import { IUserModel } from '../interfaces/IModel';
 import { IUserService } from '../interfaces/IService';
-import IUser from '../interfaces/IUser';
+import IUser from '../interfaces';
 import errors from 'restify-errors';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';

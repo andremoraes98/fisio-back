@@ -1,5 +1,5 @@
 import { model as mongooseCreateModel, Schema } from 'mongoose';
-import { IExercise } from '../interfaces/IUser';
+import { IExercise } from '../interfaces';
 import MongoModel from './MongoModel';
 
 const exerciseMongooseSchema = new Schema<IExercise>({
@@ -21,8 +21,8 @@ class User extends MongoModel<IExercise> {
     return exercises;
   }
 
-  public async readAllByRole(role: string): Promise<IExercise[]> {
-    const exercises = await this._model.find({ role });
+  public async readAllByMuscle(muscle: string[]): Promise<IExercise[]> {
+    const exercises = await this._model.find({ muscle: { $in: muscle } });
 
     return exercises;
   }

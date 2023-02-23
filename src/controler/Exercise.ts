@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { IUserService } from '../interfaces/IService';
-import IUser from '../interfaces';
+import { IExerciseService } from '../interfaces/IService';
+import { IExercise } from '../interfaces';
 
-class UserController {
-  private _service: IUserService;
+class ExerciseController {
+  private _service: IExerciseService;
 
-  constructor(service: IUserService) {
+  constructor(service: IExerciseService) {
     this._service = service;
   }
 
@@ -15,10 +15,10 @@ class UserController {
     return res.status(200).json(result);
   }
 
-  public async readAllByRole(req: Request, res: Response) {
-    const { role } = req.params;
+  public async readAllByMuscles(req: Request, res: Response) {
+    const { muscles } = req.body;
 
-    const result = await this._service.readAllByRole(role);
+    const result = await this._service.readAllByMuscle(muscles);
 
     return res.status(200).json(result);
   }
@@ -32,17 +32,17 @@ class UserController {
   }
 
   public async create(req: Request, res: Response) {
-    const userInfos = req.body as IUser;
-    const result = await this._service.create(userInfos);
+    const exerciseInfos = req.body as IExercise;
+    const result = await this._service.create(exerciseInfos);
 
     return res.status(201).json(result);
   }
 
   public async updateOne(req: Request, res: Response) {
     const { id } = req.params;
-    const userInfos = req.body as IUser;
+    const exerciseInfos = req.body as IExercise;
 
-    await this._service.updateOne(id, userInfos);
+    await this._service.updateOne(id, exerciseInfos);
 
     return res.send(204);
   }
@@ -53,13 +53,6 @@ class UserController {
 
     return res.send(204);
   }
-
-  public async login(req: Request, res: Response) {
-    const { email } = req.body;
-    const token = await this._service.login(email);
-
-    res.status(200).json({token});
-  };
 }
 
-export default UserController;
+export default ExerciseController;

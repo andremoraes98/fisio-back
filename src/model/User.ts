@@ -1,5 +1,5 @@
 import { model as mongooseCreateModel, Schema } from 'mongoose';
-import IUser from '../interfaces/IUser';
+import IUser from '../interfaces';
 import MongoModel from './MongoModel';
 import { IUserModel } from '../interfaces/IModel';
 
