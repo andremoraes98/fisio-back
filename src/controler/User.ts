@@ -15,8 +15,17 @@ class UserController {
     return res.status(200).json(result);
   }
 
+  public async readAllByRole(req: Request, res: Response) {
+    const { role } = req.params;
+
+    const result = await this._service.readAllByRole(role);
+
+    return res.status(200).json(result);
+  }
+
   public async readOne(req: Request, res: Response) {
     const { id } = req.params;
+
     const user = await this._service.readOne(id);
 
     return res.status(200).json(user);
