@@ -1,12 +1,9 @@
 import { isValidObjectId } from 'mongoose';
 import { IUserModel } from '../interfaces/IModel';
 import { IUserService } from '../interfaces/IService';
-import IUser from '../interfaces/IUser';
+import IUser from '../interfaces';
 import errors from 'restify-errors';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'jwt_secret'
 
 class UserService implements IUserService {
   private _user: IUserModel;
@@ -56,7 +53,7 @@ class UserService implements IUserService {
   
     const { password } = object;
 
-    const user = this._user.readOne(_id, !password);
+    const user = await this._user.readOne(_id, !password);
 
     if (!user) {
       throw new errors.NotFoundError('Usuário não encontrado!')
@@ -64,14 +61,13 @@ class UserService implements IUserService {
 
     if (!password) {
       await this._user.updateOne(_id, {
-        ...user,
         ...object,
+        password: user.password,
       });
     } else {
       const encryptedPassword = bcrypt.hashSync(password, 10);
   
       await this._user.updateOne(_id, {
-        ...user,
         ...object,
         password: encryptedPassword,
       });
@@ -92,16 +88,14 @@ class UserService implements IUserService {
     await this._user.destroy(_id)
   }
   
-  public async login(email: string): Promise<string> {
-    const user = await this._user.findOneWhereEmail(email);
+  public async login(email: string): Promise<IUser> {
+    const user = await this._user.findOneWhereEmail(email, false);
 
     if (!user) {
       throw new errors.NotFoundError('Usuário não encontrado!')
     };
 
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET);
-
-    return token
+    return user
   }
 }
 

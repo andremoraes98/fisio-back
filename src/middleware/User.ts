@@ -34,7 +34,7 @@ const validateEmail = async (req: Request, res: Response, next: NextFunction) =>
 const validatePassword = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
 
-  const result = await userModel.findOneWhereEmail(email);
+  const result = await userModel.findOneWhereEmail(email, true);
 
   if (!result) {
     throw new errors.NotFoundError('Email não cadastrado!');

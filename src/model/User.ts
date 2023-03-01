@@ -1,5 +1,5 @@
 import { model as mongooseCreateModel, Schema } from 'mongoose';
-import IUser from '../interfaces/IUser';
+import IUser from '../interfaces';
 import MongoModel from './MongoModel';
 import { IUserModel } from '../interfaces/IModel';
 
@@ -35,9 +35,24 @@ class User extends MongoModel<IUser> implements IUserModel {
   }
 
   public async readOne(_id: string, withPassword = false): Promise<IUser | null> {
-    const user = await this._model.findById(_id, {
-      password: withPassword ? 1 : 0,
-    });
+    const options = withPassword
+      ? {
+        _id: 1,
+        classes: 1,
+        email: 1,
+        name: 1,
+        role: 1,
+        password: 1,
+      }
+      : {
+        _id: 1,
+        classes: 1,
+        email: 1,
+        name: 1,
+        role: 1,
+      };
+
+    const user = await this._model.findById(_id, options);
 
     return user;
   }
@@ -56,8 +71,25 @@ class User extends MongoModel<IUser> implements IUserModel {
     await this._model.findByIdAndDelete(_id);
   }
 
-  public async findOneWhereEmail(email: string): Promise<IUser | null> {
-    const user = await this._model.findOne({ email });
+  public async findOneWhereEmail(email: string, withPassword = false): Promise<IUser | null> {
+    const options = withPassword
+      ? {
+        _id: 1,
+        classes: 1,
+        email: 1,
+        name: 1,
+        role: 1,
+        password: 1,
+      }
+      : {
+        _id: 1,
+        classes: 1,
+        email: 1,
+        name: 1,
+        role: 1,
+      };
+
+    const user = await this._model.findOne({ email }, options);
 
     return user;
   }

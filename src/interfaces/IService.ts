@@ -1,4 +1,4 @@
-import IUser from "./IUser";
+import IUser, { IExercise } from ".";
 
 interface IService<T> {
   readAll(): Promise<T[]>;
@@ -9,9 +9,13 @@ interface IService<T> {
 }
 
 interface IUserService extends IService<IUser> {
-  login(email: string): Promise<string>;
+  login(email: string): Promise<IUser>;
   readAllByRole(role: string): Promise<IUser[]>;
 }
 
-export { IUserService }
+interface IExerciseService extends IService<IExercise> {
+  readAllByMuscle(muscles: string[]): Promise<IExercise[]>;
+}
+
+export { IUserService, IExerciseService }
 export default IService;
