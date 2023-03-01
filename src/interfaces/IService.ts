@@ -9,7 +9,7 @@ interface IService<T> {
 }
 
 interface IUserService extends IService<IUser> {
-  login(email: string): Promise<string>;
+  login(email: string): Promise<IUser>;
   readAllByRole(role: string): Promise<IUser[]>;
 }
 

@@ -9,7 +9,7 @@ interface IModel<T> {
 }
 
 interface IUserModel extends IModel<IUser> {
-  findOneWhereEmail(email: string): Promise<IUser | null>;
+  findOneWhereEmail(email: string, withPassword: boolean): Promise<IUser | null>;
   readAllByRole(role: string): Promise<IUser[]>;
 }
 
