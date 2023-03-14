@@ -2,7 +2,7 @@ import { model as mongooseCreateModel, Schema } from 'mongoose';
 import { IExercise } from '../interfaces';
 import MongoModel from './MongoModel';
 
-const exerciseMongooseSchema = new Schema<IExercise>({
+export const exerciseMongooseSchema = new Schema<IExercise>({
     name: String,
     link: String,
     muscle: [String],
