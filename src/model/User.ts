@@ -1,12 +1,34 @@
-import { model as mongooseCreateModel, Schema } from 'mongoose';
-import IUser from '../interfaces/IUser';
+import mongoose, { model as mongooseCreateModel, Schema } from 'mongoose';
+import IUser, { InterExerciseDetails } from '../interfaces';
 import MongoModel from './MongoModel';
 import { IUserModel } from '../interfaces/IModel';
+import { exerciseMongooseSchema } from './Exercise';
+
+
+const exerciseDetailSchema = new Schema<InterExerciseDetails>({
+  concentricSpeed: String,
+  eccentricSpeed: String,
+  exercise: exerciseMongooseSchema,
+  interval: String,
+  isometric: [String],
+  repetitions: String,
+  series: String,
+});
 
 const userMongooseSchema = new Schema<IUser>({
     name: String,
     email: String,
-    classes: { type: [String], required: false},
+    classes: {
+      A: {type: [exerciseDetailSchema], required: false},
+      B: {type: [exerciseDetailSchema], required: false},
+      C: {type: [exerciseDetailSchema], required: false},
+      D: {type: [exerciseDetailSchema], required: false},
+      E: {type: [exerciseDetailSchema], required: false},
+      F: {type: [exerciseDetailSchema], required: false},
+      G: {type: [exerciseDetailSchema], required: false},
+      U: {type: [exerciseDetailSchema], required: false},
+      M: {type: [exerciseDetailSchema], required: false},
+    },
     role: String,
     password: String,
   },
@@ -35,9 +57,24 @@ class User extends MongoModel<IUser> implements IUserModel {
   }
 
   public async readOne(_id: string, withPassword = false): Promise<IUser | null> {
-    const user = await this._model.findById(_id, {
-      password: withPassword ? 1 : 0,
-    });
+    const options = withPassword
+      ? {
+        _id: 1,
+        classes: 1,
+        email: 1,
+        name: 1,
+        role: 1,
+        password: 1,
+      }
+      : {
+        _id: 1,
+        classes: 1,
+        email: 1,
+        name: 1,
+        role: 1,
+      };
+
+    const user = await this._model.findById(_id, options);
 
     return user;
   }
@@ -56,8 +93,25 @@ class User extends MongoModel<IUser> implements IUserModel {
     await this._model.findByIdAndDelete(_id);
   }
 
-  public async findOneWhereEmail(email: string): Promise<IUser | null> {
-    const user = await this._model.findOne({ email });
+  public async findOneWhereEmail(email: string, withPassword = false): Promise<IUser | null> {
+    const options = withPassword
+      ? {
+        _id: 1,
+        classes: 1,
+        email: 1,
+        name: 1,
+        role: 1,
+        password: 1,
+      }
+      : {
+        _id: 1,
+        classes: 1,
+        email: 1,
+        name: 1,
+        role: 1,
+      };
+
+    const user = await this._model.findOne({ email }, options);
 
     return user;
   }

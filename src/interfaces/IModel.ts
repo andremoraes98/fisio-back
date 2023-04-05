@@ -1,4 +1,4 @@
-import IUser from "./IUser";
+import IUser, { IExercise } from ".";
 
 interface IModel<T> {
   readAll(): Promise<T[]>;
@@ -9,9 +9,13 @@ interface IModel<T> {
 }
 
 interface IUserModel extends IModel<IUser> {
-  findOneWhereEmail(email: string): Promise<IUser | null>;
+  findOneWhereEmail(email: string, withPassword: boolean): Promise<IUser | null>;
   readAllByRole(role: string): Promise<IUser[]>;
 }
 
-export {IUserModel}
+interface IExerciseModel extends IModel<IExercise> {
+  readAllByMuscle(muscles: string[]): Promise<IExercise[]>;
+}
+
+export {IUserModel, IExerciseModel}
 export default IModel;
